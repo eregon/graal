@@ -352,7 +352,25 @@ suite = {
       "workingSets" : "Truffle,SimpleLanguage,Test",
       "license" : "UPL",
     },
-   },
+
+    "com.oracle.truffle.coro" : {
+      "subDir" : "truffle",
+      "sourceDirs" : ["src"],
+      "javaCompliance" : "1.7",
+      "workingSets" : "Coro,Truffle",
+    },
+
+    "com.oracle.truffle.coro.test" : {
+      "subDir" : "truffle",
+      "sourceDirs" : ["src"],
+      "dependencies" : [
+        "com.oracle.truffle.coro",
+        "mx:JUNIT",
+      ],
+      "javaCompliance" : "1.7",
+      "workingSets" : "Coro,Truffle,Test",
+    },
+  },
 
   "licenses" : {
     "UPL" : {
@@ -376,6 +394,7 @@ suite = {
         "com.oracle.truffle.api.vm",
         "com.oracle.truffle.object.basic",
         "com.oracle.truffle.api.object.dsl",
+        "com.oracle.truffle.coro",
       ],
       "distDependencies" : [
       ],
