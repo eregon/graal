@@ -110,6 +110,25 @@ suite = {
   "snippetsPattern" : ".*(Snippets|doc-files).*",
   "projects" : {
 
+    "com.oracle.truffle.coro" : {
+      "subDir" : "src",
+      "sourceDirs" : ["src"],
+      "dependencies" : ["com.oracle.truffle.api.dsl"],
+      "javaCompliance" : "8+",
+      "workingSets" : "Coro,Truffle",
+    },
+
+    "com.oracle.truffle.coro.test" : {
+      "subDir" : "src",
+      "sourceDirs" : ["src"],
+      "dependencies" : [
+        "com.oracle.truffle.coro",
+        "mx:JUNIT",
+      ],
+      "javaCompliance" : "8+",
+      "workingSets" : "Coro,Truffle,Test",
+    },
+
     # ------------- Truffle -------------
 
     "com.oracle.truffle.api" : {
@@ -673,6 +692,7 @@ suite = {
       "subDir" : "src",
       "javaCompliance" : "8+",
       "dependencies" : [
+        "com.oracle.truffle.coro",
         "com.oracle.truffle.api.dsl",
         "com.oracle.truffle.api.profiles",
         "com.oracle.truffle.api.debug",
@@ -895,6 +915,7 @@ suite = {
          "com.oracle.truffle.api.instrumentation.test",
          "com.oracle.truffle.api.debug.test",
          "com.oracle.truffle.api.object.dsl.test",
+         "com.oracle.truffle.coro.test",
          "com.oracle.truffle.object.basic.test",
          "com.oracle.truffle.nfi.test",
        ],
