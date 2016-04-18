@@ -587,6 +587,7 @@ suite = {
     "com.oracle.truffle.coro" : {
       "subDir" : "truffle",
       "sourceDirs" : ["src"],
+      "dependencies" : ["com.oracle.truffle.api.dsl"],
       "javaCompliance" : "1.7",
       "workingSets" : "Coro,Truffle",
     },
