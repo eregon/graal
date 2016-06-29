@@ -197,15 +197,7 @@ public abstract class ShapeImpl extends Shape {
      * Calculate array size for the given number of elements.
      */
     private static int capacityFromSize(int size) {
-        if (size == 0) {
-            return 0;
-        } else if (size < 4) {
-            return 4;
-        } else if (size < 32) {
-            return ((size + 7) / 8) * 8;
-        } else {
-            return ((size + 15) / 16) * 16;
-        }
+        return size;
     }
 
     public final int getObjectArraySize() {
