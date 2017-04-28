@@ -588,7 +588,7 @@ suite = {
       "subDir" : "truffle",
       "sourceDirs" : ["src"],
       "dependencies" : ["com.oracle.truffle.api.dsl"],
-      "javaCompliance" : "1.7",
+      "javaCompliance" : "1.8",
       "workingSets" : "Coro,Truffle",
     },
 
@@ -599,7 +599,7 @@ suite = {
         "com.oracle.truffle.coro",
         "mx:JUNIT",
       ],
-      "javaCompliance" : "1.7",
+      "javaCompliance" : "1.8",
       "workingSets" : "Coro,Truffle,Test",
     },
   },
