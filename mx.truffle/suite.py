@@ -772,6 +772,7 @@ suite = {
          "com.oracle.truffle.api.debug.test",
          "com.oracle.truffle.api.interop.java.test",
          "com.oracle.truffle.api.object.dsl.test",
+         "com.oracle.truffle.coro.test",
          "com.oracle.truffle.object.basic.test",
          "com.oracle.truffle.tools.test",
          "com.oracle.truffle.nfi.test",
