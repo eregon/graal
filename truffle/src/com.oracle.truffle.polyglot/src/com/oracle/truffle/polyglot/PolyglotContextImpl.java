@@ -473,7 +473,7 @@ final class PolyglotContextImpl extends AbstractContextImpl implements com.oracl
             threadInfo = threads.get(current);
             if (threadInfo == null) {
                 threadInfo = createThreadInfo(current);
-                needsInitialization = !inContextPreInitialization;
+                needsInitialization = true;
             }
             boolean transitionToMultiThreading = singleThreaded.isValid() && hasActiveOtherThread(true);
             if (transitionToMultiThreading) {
@@ -1258,6 +1258,7 @@ final class PolyglotContextImpl extends AbstractContextImpl implements com.oracl
             // Need to clean up Threads before storing SVM image
             context.currentThreadInfo = PolyglotThreadInfo.NULL;
             context.constantCurrentThreadInfo = PolyglotThreadInfo.NULL;
+            context.threads.clear();
             disposeStaticContext(context);
             return context;
         } finally {
