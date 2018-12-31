@@ -457,10 +457,17 @@ final class PolyglotLanguageContext implements PolyglotImpl.VMObject {
     boolean ensureInitialized(PolyglotLanguage accessingLanguage) {
         ensureCreated(accessingLanguage);
         boolean wasInitialized = false;
+        boolean doInitialize = false;
         if (!initialized) {
             synchronized (context) {
                 if (!initialized) {
                     initialized = true; // Allow language use during initialization
+                    doInitialize = true;
+                }
+            }
+            // Initialization should run without the context lock, to let other threads start
+            if (doInitialize) {
+                if (doInitialize) { // Second indent to minimize diff
                     try {
                         if (!context.inContextPreInitialization) {
                             LANGUAGE.initializeThread(env, Thread.currentThread());
@@ -471,11 +478,13 @@ final class PolyglotLanguageContext implements PolyglotImpl.VMObject {
                             LANGUAGE.initializeMultiThreading(env);
                         }
 
-                        for (PolyglotThreadInfo threadInfo : context.getSeenThreads().values()) {
-                            if (threadInfo.thread == Thread.currentThread()) {
-                                continue;
+                        synchronized (context) {
+                            for (PolyglotThreadInfo threadInfo : context.getSeenThreads().values()) {
+                                if (threadInfo.thread == Thread.currentThread()) {
+                                    continue;
+                                }
+                                LANGUAGE.initializeThread(env, threadInfo.thread);
                             }
-                            LANGUAGE.initializeThread(env, threadInfo.thread);
                         }
 
                         wasInitialized = true;
