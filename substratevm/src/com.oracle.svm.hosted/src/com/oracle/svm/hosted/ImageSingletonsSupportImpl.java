@@ -66,22 +66,22 @@ public final class ImageSingletonsSupportImpl extends ImageSingletonsSupport {
          * configuration in all worker threads, and {@link #clearInThread clear} it when it is no
          * longer needed.
          */
-        private static final ThreadLocal<HostedManagement> hostedVMConfig = new ThreadLocal<>();
+        private static HostedManagement hostedVMConfig = null;
 
         public static HostedManagement get() {
-            HostedManagement result = hostedVMConfig.get();
+            HostedManagement result = hostedVMConfig;
             assert result != null;
             return result;
         }
 
         public static void installInThread(HostedManagement vmConfig) {
-            assert hostedVMConfig.get() == null;
-            hostedVMConfig.set(vmConfig);
+            assert hostedVMConfig == null || hostedVMConfig == vmConfig;
+            hostedVMConfig = vmConfig;
         }
 
         public static void clearInThread() {
-            assert hostedVMConfig.get() != null;
-            hostedVMConfig.set(null);
+            // assert hostedVMConfig.get() != null;
+            // hostedVMConfig.set(null);
         }
 
         private final Map<Class<?>, Object> configObjects;
