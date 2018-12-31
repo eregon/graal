@@ -327,35 +327,42 @@ final class PolyglotLanguageContext implements PolyglotImpl.VMObject {
     boolean ensureInitialized(PolyglotLanguage accessingLanguage) {
         ensureCreated(accessingLanguage);
         boolean wasInitialized = false;
+        boolean doInitialize = false;
         if (!initialized) {
             synchronized (context) {
                 if (!initialized) {
                     initialized = true; // Allow language use during initialization
-                    try {
-                        if (!context.inContextPreInitialization) {
-                            LANGUAGE.initializeThread(env, Thread.currentThread());
-                        }
+                    doInitialize = true;
+                }
+            }
+            // Initialization should run without the context lock, to let other threads start
+            if (doInitialize) {
+                try {
+                    if (!context.inContextPreInitialization) {
+                        LANGUAGE.initializeThread(env, Thread.currentThread());
+                    }
 
-                        LANGUAGE.postInitEnv(env);
+                    LANGUAGE.postInitEnv(env);
 
-                        if (!context.isSingleThreaded()) {
-                            LANGUAGE.initializeMultiThreading(env);
-                        }
+                    if (!context.isSingleThreaded()) {
+                        LANGUAGE.initializeMultiThreading(env);
+                    }
 
+                    synchronized (context) {
                         for (PolyglotThreadInfo threadInfo : context.getSeenThreads().values()) {
                             if (threadInfo.thread == Thread.currentThread()) {
                                 continue;
                             }
                             LANGUAGE.initializeThread(env, threadInfo.thread);
                         }
-
-                        wasInitialized = true;
-                    } catch (Throwable e) {
-                        // language not successfully initialized, reset to avoid inconsistent
-                        // language contexts
-                        initialized = false;
-                        throw e;
                     }
+
+                    wasInitialized = true;
+                } catch (Throwable e) {
+                    // language not successfully initialized, reset to avoid inconsistent
+                    // language contexts
+                    initialized = false;
+                    throw e;
                 }
             }
         }
