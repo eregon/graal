@@ -314,7 +314,7 @@ final class PolyglotEngineImpl extends org.graalvm.polyglot.impl.AbstractPolyglo
             synchronized (ENGINES) {
                 if (!shutdownHookInitialized) {
                     shutdownHookInitialized = true;
-                    Runtime.getRuntime().addShutdownHook(new Thread(new PolyglotShutDownHook()));
+                    // Runtime.getRuntime().addShutdownHook(new Thread(new PolyglotShutDownHook()));
                 }
             }
         }
