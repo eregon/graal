@@ -1218,7 +1218,7 @@ final class PolyglotContextImpl extends AbstractContextImpl implements com.oracl
                         false,
                         PolyglotAccess.ALL, // TODO change this to NONE with GR-14657
                         false,
-                        false,
+                        true,
                         false,
                         false,
                         null,
