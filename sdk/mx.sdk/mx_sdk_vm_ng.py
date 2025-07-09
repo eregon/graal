@@ -419,6 +419,8 @@ class NativeImageBuildTask(mx.BuildTask):
             '-H:+GuaranteeSubstrateTypesLinked',
             '-H:+ReportExceptionStackTraces',
             '-H:+DetectUserDirectoriesInImageHeap',
+            '-H:+BuildOutputProgress', # TODO not in CI
+            '-H:+BuildOutputLinks', # TODO not in CI
         ]
         if get_bootstrap_graalvm_version() >= mx.VersionSpec("24.1"):
             experimental_build_args.append('-H:+VerifyRuntimeCompilationFrameStates')
@@ -459,6 +461,7 @@ class NativeImageBuildTask(mx.BuildTask):
             '-march=compatibility',  # Target maximum portability
             '--parallelism=' + str(self.parallelism),
             '--link-at-build-time',
+            '--color=always', # TODO not in CI
             # we want "25.0.0-dev" and not "dev" (the default used in NativeImage#prepareImageBuildArgs)
             '-Dorg.graalvm.version={}'.format(_suite.release_version()),
         ] + mx_sdk_vm_impl.svm_experimental_options(experimental_build_args)
@@ -510,10 +513,10 @@ class NativeImageBuildTask(mx.BuildTask):
         native_image_command = self.get_build_command()
 
         # Prefix native-image builds that print straight to stdout or stderr with [<output_filename>:<pid>]
-        out = mx.PrefixCapture(lambda l: mx.log(l, end=''), self.subject.output_file_name())
-        err = mx.PrefixCapture(lambda l: mx.log(l, end='', file=sys.stderr), out.identifier)
+        out = mx.BytePrefixCapture(lambda l: mx.log(l, end=''), self.subject.output_file_name())
+        err = mx.BytePrefixCapture(lambda l: mx.log(l, end='', file=sys.stderr), out.identifier)
 
-        mx.run(native_image_command, nonZeroIsFatal=True, out=out, err=err)
+        mx.run(native_image_command, nonZeroIsFatal=True, out=out, err=err, line_buffered=False)
 
         with open(self._get_command_file(), 'w') as f:
             f.writelines((l + linesep for l in native_image_command))
